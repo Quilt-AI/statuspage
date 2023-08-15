@@ -64,5 +64,6 @@ then
   git config --global user.email 'founders@quilt.app'
   git add -A --force logs/
   git commit -am '[Automated] Update Health Check Logs'
+  git pull --rebase
   git push
 fi
