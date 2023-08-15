@@ -263,27 +263,43 @@ async function genAllReports() {
   }
 }
 
-async function genIncidentReport() {
-  const response = await fetch(
-    "https://incidents.statsig.workers.dev/contents"
-  );
-  if (response.ok) {
-    const json = await response.json();
+async function genActiveIncidentReports() {
+  const activeResponse = await fetch("/active_incidents.md");
+  if (activeResponse.ok) {
+    const text = (await activeResponse.text()).trim();
     try {
       const activeDom = DOMPurify.sanitize(
-        marked.parse(json.active ? json.active : "No active incidents")
+        marked.parse(text ? text : "No active incidents")
       );
-      const inactiveDom = DOMPurify.sanitize(marked.parse(json.inactive));
       document.getElementById("activeIncidentReports").innerHTML = activeDom;
-      document.getElementById("pastIncidentReports").innerHTML = inactiveDom;
 
-      if (json.active) {
+      if (text) {
         setTimeout(() => {
           document.getElementById("incidents").scrollIntoView(true);
         }, 1000);
       }
     } catch (e) {
-      console.log(e.message);
+      console.error(e.message);
     }
   }
+}
+
+async function genInactiveIncidentReports() {
+  const inactiveResponse = await fetch("/inactive_incidents.md");
+  if (inactiveResponse.ok) {
+    const text = await inactiveResponse.text();
+    try {
+      const inactiveDom = DOMPurify.sanitize(
+        marked.parse(text ? text : "No inactive incidents")
+      );
+      document.getElementById("pastIncidentReports").innerHTML = inactiveDom;
+    } catch (e) {
+      console.error(e.message);
+    }
+  }
+}
+
+async function genIncidentReport() {
+  await genActiveIncidentReports();
+  await genInactiveIncidentReports();
 }
