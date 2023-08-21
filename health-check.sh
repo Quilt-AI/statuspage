@@ -66,6 +66,5 @@ then
   git add -A --force logs/
   git commit -am '[Automated] Update Health Check Logs'
   git pull --rebase
-  echo "$GIT_SSH_KEY" > "$RUNNER_TEMP"/ssh_key
-  GIT_SSH_COMMAND="ssh -i $RUNNER_TEMP/ssh_key" git push
+  git push
 fi
