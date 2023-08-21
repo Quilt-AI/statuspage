@@ -20,8 +20,8 @@ jobs:
     name: Check all sites
     steps:
       - uses: actions/checkout@v3
-      - name: Run Shell Script
         with:
           ssh-key: ${{ secrets.GIT_SSH_KEY }}
+      - name: Run Shell Script
         id: shell_script_run
         run: bash ./health-check.sh
