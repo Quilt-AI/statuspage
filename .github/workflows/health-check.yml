@@ -10,39 +10,18 @@ on:
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
-  contents: write
-  pages: write
-  id-token: write
-
-concurrency:
-  group: "pages"
-  cancel-in-progress: false
+  contents: read
 
 jobs:
   health_check_job:
+    environment:
+      name: status-update
     runs-on: ubuntu-latest
     name: Check all sites
     steps:
       - uses: actions/checkout@v3
       - name: Run Shell Script
+        env:
+          GIT_SSH_KEY: ${{ secrets.GIT_SSH_KEY }}
         id: shell_script_run
         run: bash ./health-check.sh
-  deploy:
-    needs: health_check_job
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Setup Pages
-        uses: actions/configure-pages@v3
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v2
-        with:
-          # Upload entire repository
-          path: '.'
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v2

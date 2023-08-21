@@ -64,6 +64,7 @@ then
   git config --global user.email 'founders@quilt.app'
   git add -A --force logs/
   git commit -am '[Automated] Update Health Check Logs'
+  echo "$GIT_SSH_KEY" > "$TMP/ssh_key"
   git pull --rebase
-  git push
+  git push -i "$TMP/ssh_key"
 fi
