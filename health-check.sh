@@ -1,3 +1,4 @@
+#!/bin/bash
 # In the original repository we'll just print the result of status checks,
 # without committing. This avoids generating several commits that would make
 # later upstream merges messy for anyone who forked us.
@@ -64,7 +65,6 @@ then
   git config --global user.email 'founders@quilt.app'
   git add -A --force logs/
   git commit -am '[Automated] Update Health Check Logs'
-  echo "$GIT_SSH_KEY" > "$TMP/ssh_key"
   git pull --rebase
-  git push -i "$TMP/ssh_key"
+  git push -i <(echo "$GIT_SSH_KEY")
 fi
